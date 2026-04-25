@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E-Payment Comparison Tool</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+        canvas {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>E-Payment Comparison Tool</h1>
+
+<p>Select Payment Methods:</p>
+<input type="checkbox" value="UPI"> UPI
+<input type="checkbox" value="Credit Card"> Credit Card
+<input type="checkbox" value="Net Banking"> Net Banking
+
+<br><br>
+<button onclick="compare()">Compare</button>
+
+<h3>Transaction Fees</h3>
+<canvas id="feeChart"></canvas>
+
+<h3>Transaction Speed</h3>
+<canvas id="speedChart"></canvas>
+
+<h3>Availability</h3>
+<canvas id="availabilityChart"></canvas>
+
+<script>
+const data = {
+    "UPI": { fee: 0, speed: 5, availability: 5 },
+    "Credit Card": { fee: 3, speed: 4, availability: 5 },
+    "Net Banking": { fee: 2, speed: 3, availability: 4 }
+};
+
+let feeChart, speedChart, availabilityChart;
+
+function compare() {
+    const selected = document.querySelectorAll('input[type="checkbox"]:checked');
+
+    if (selected.length === 0) {
+        alert("Please select at least one option");
+        return;
+    }
+
+    const labels = [];
+    const fees = [];
+    const speeds = [];
+    const availability = [];
+
+    selected.forEach(item => {
+        const method = item.value;
+        labels.push(method);
+        fees.push(data[method].fee);
+        speeds.push(data[method].speed);
+        availability.push(data[method].availability);
+    });
+
+    if (feeChart) feeChart.destroy();
+    if (speedChart) speedChart.destroy();
+    if (availabilityChart) availabilityChart.destroy();
+
+    feeChart = new Chart(document.getElementById('feeChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{ label: 'Fees', data: fees, backgroundColor: 'red' }]
+        }
+    });
+
+    speedChart = new Chart(document.getElementById('speedChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{ label: 'Speed', data: speeds, backgroundColor: 'green' }]
+        }
+    });
+
+    availabilityChart = new Chart(document.getElementById('availabilityChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{ label: 'Availability', data: availability, backgroundColor: 'blue' }]
+        }
+    });
+}
+</script>
+
+</body>
+</html>
+
